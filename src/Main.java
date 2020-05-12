@@ -4,6 +4,7 @@ import java.util.*;
 
 /**
  * This is a framework designed for simplifying input handling during competitive programming situations.
+ * Utility classes with helpful data structures (union find, graphs, etc.) are also included
  * Each question is instantiated in the constructor for its parent class
  * e.x. addTwo is instantiated when a Template instance is made
  *
@@ -16,9 +17,9 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        IO.open();
+        io.open();
         Template t = new Template();
-        IO.close();
+        io.close();
 
         System.exit(0);
     }
@@ -64,7 +65,7 @@ public class Main {
     }
 }
 
-class IO {
+class io {
     static BufferedReader reader;
     static StringTokenizer tokenizer;
     static BufferedWriter writer;
@@ -147,7 +148,7 @@ class IO {
     static int[] makeArray(int n) throws IOException {
         int[] array = new int[n];
         for (int i = 0; i < n; i++) {
-            array[i] = IO.i();
+            array[i] = io.i();
         }
         return array;
     }
@@ -160,7 +161,7 @@ class IO {
         int[][] array = new int[n][m];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                array[i][j] = IO.i();
+                array[i][j] = io.i();
             }
         }
         return array;
@@ -174,7 +175,7 @@ class IO {
         ArrayList<Integer> list = new ArrayList<>();
         String str = null;
         do {
-            str = IO.reader.readLine();
+            str = io.reader.readLine();
             if (str == null || str.length() == 0) break;
 
             list.add(Integer.parseInt(str));
@@ -191,7 +192,7 @@ class IO {
         ArrayList<String> list = new ArrayList<>();
         String str = null;
         do {
-            str = IO.reader.readLine();
+            str = io.reader.readLine();
             if (str == null || str.length() == 0) break;
             list.add(str);
         } while (str != null || str.length() != 0);
@@ -205,7 +206,7 @@ class IO {
     static ArrayList<String> readStringsToArrayListUntilEOF() throws IOException {
         ArrayList<String> list = new ArrayList<>();
         String str = "";
-        while ((str = IO.reader.readLine()) != null) {
+        while ((str = io.reader.readLine()) != null) {
             if (str.trim().length() == 0) continue;
             list.add(str.trim() + " ");
         }
@@ -220,7 +221,7 @@ class IO {
         ArrayList<String> list = new ArrayList<>();
         String str = null;
         do {
-            str = IO.reader.readLine();
+            str = io.reader.readLine();
             if (str == null || str.length() == 0 || str.equals(b)) break;
             list.add(str);
         } while (str != null || str.length() != 0);
@@ -236,7 +237,7 @@ class IO {
         String str = null;
         String[] vals;
 
-        str = IO.reader.readLine();
+        str = io.reader.readLine();
         if (str == null || str.length() == 0) return list;
         vals = str.split(" ");
 
@@ -256,7 +257,7 @@ class IO {
         String str = null;
         String[] vals;
 
-        str = IO.reader.readLine();
+        str = io.reader.readLine();
         if (str == null || str.length() == 0) return list;
         vals = str.split(" ");
 
@@ -273,7 +274,68 @@ class IO {
      */
     static void printArray(int[] array, boolean newLine) throws IOException {
         for (int i = 0; i <array.length; i++) {
-            IO.w(i == array.length - 1 ? array[i] + (newLine ? "\n" : "") : array[i] + " ");
+            io.w(i == array.length - 1 ? array[i] + (newLine ? "\n" : "") : array[i] + " ");
         }
     }
+}
+
+class Graph {
+
+    Edge[] edgeList;
+    int V, E;
+
+    public Graph(int v, int e) {
+        this.V = v; this.E = e;
+        this.edgeList = new Edge[e];
+        for (int i = 0; i < edgeList.length; i++) {
+            edgeList[i] = new Edge(0, 0, 0);
+        }
+    }
+
+    public Graph(int v, int e, Edge[] edgelist) {
+        this.V = v; this.E = e;
+        this.edgeList = edgelist;
+    }
+}
+
+class Edge {
+    int u, v, weight;
+    public Edge(int a, int b, int weight) {
+        this.u = a; this.v = b; this.weight = weight;
+    }
+}
+
+class Util {
+
+    static int[][] deepCopy(int[][] a) {
+        if (a == null) return null;
+        int[][] copy = new int[a.length][];
+        for (int i = 0; i < a.length; i++) {
+            copy[i] = Arrays.copyOf(a[i], a[i].length);
+        }
+        return copy;
+    }
+
+    static List<Integer> generatePrimes(int N) {
+        // p(n) < n ln (n ln n) for n >= 6
+        final int size = (int) Math.floor(0.5 * (N - 3)) + 1;
+        List<Integer> primes = new ArrayList<>();
+        List<Boolean> isPrime = new ArrayList<>(Collections.nCopies(size + 1, true));
+        primes.add(2);
+
+        for (long i = 0; i < size; ++i) {
+            if (isPrime.get((int) i)) {
+
+                long p = ((i * 2) + 3);
+                primes.add((int) p);
+
+                for (long j = ((i * i) * 2) + 6 * i + 3; j < size; j += p) {
+                    isPrime.set((int) j, false);
+                }
+            }
+        }
+
+        return primes;
+    }
+
 }

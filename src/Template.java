@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.*;
 
 public class Template {
 
@@ -14,10 +13,10 @@ public class Template {
      */
     public void addTwo() throws IOException {
         System.out.print("Please input two integers and press enter: ");
-        int a = IO.i();
-        int b = IO.i();
+        int a = io.i();
+        int b = io.i();
         int c = a + b;
-        IO.w("The answer is " + c);
+        io.w("The answer is " + c);
     }
 
     public void question2() throws IOException {
