@@ -1,70 +1,34 @@
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
-
 /**
  * This is a framework designed for simplifying input handling during competitive programming situations.
  * Utility classes with helpful data structures (union find, graphs, etc.) are also included
  * Each question is instantiated in the constructor for its parent class
  * e.x. addTwo is instantiated when a Template instance is made
  *
- * BufferedReader and BufferedWriter instances are instantiated in main so they don't have to be called in every question.
+ * BufferedReader and BufferedWriter instances are instantiated and invoked in Main.
  *
  * @author Mark Chen
- * @version 1.0
+ * @version 1.1
  * @since 2019-10-24
  */
+import java.io.*;
+import java.util.*;
+
 public class Main {
 
     public static void main(String[] args) throws IOException {
         io.open();
         Template t = new Template();
         io.close();
-
         System.exit(0);
     }
 
-    /**
-     * Instantiates and runs a user-specified method from a user-specified class
-     * @param classToRun The user-specified name of the homework's class file
-     * @param methodToRun The user-specified name of the method that is to be tested in classToRun
-     * @param problemArguments Variable length array that can accommodate a large amount of custom test case objects
-     */
-    public static void Judge(String classToRun, String methodToRun, Object[] problemArguments) {
-
-        try {
-
-            Class<?> HomeworkName = Class.forName(classToRun);
-            Object homeWorkInstance = HomeworkName.getDeclaredConstructor().newInstance();
-
-            Class<?>[] argTypes = new Class[] {Object[].class};
-            Method homeworkProblem = HomeworkName.getDeclaredMethod(methodToRun, argTypes);
-
-            homeworkProblem.setAccessible(true);
-
-            Object o = homeworkProblem.invoke(homeWorkInstance, (Object) problemArguments);
-
-        } catch (ClassNotFoundException util) {
-            System.out.println("Please specify the correct class (homework) file!");
-            util.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            System.out.println("ERROR: Method " + methodToRun + " attempted to access an argument parameter out of bounds!");
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            System.out.println("POSSIBLE ERROR: Class " + classToRun + "'s constructor is either missing or not valid");
-            System.out.println("POSSIBLE ERROR: Method " + methodToRun + " attempted to access an argument parameter out of bounds!");
-            System.out.println("POSSIBLE ERROR: Method " + methodToRun + " attempted to set a variable to something of a different type!");
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            System.out.println("Please specify a correct method name for your homework!");
-            e.printStackTrace();
-        }
-
-    }
 }
 
+/*
+* Input Reading Class designed to speed up input reading.
+* Partially adapted from James Brucker's (Dept. of Computer Engineering at Kasetsart University) Lecture Materials
+* Source Link: https://www.cpe.ku.ac.th/~jim/java-io.html
+* */
 class io {
     static BufferedReader reader;
     static StringTokenizer tokenizer;
@@ -81,7 +45,7 @@ class io {
     }
 
     /**
-     * Closes BufferedReader and flushes/closes BufferedWriter
+     * Closes BufferedReader. Flushes and closes BufferedWriter
      * @return void
      */
     static void close() throws IOException {
@@ -154,13 +118,13 @@ class io {
     }
 
     /**
-     * Create an n x m 2D array
+     * Create an r x c  2D array
      * @return int[][]
      */
-    static int[][] makeArray(int n, int m) throws IOException {
-        int[][] array = new int[n][m];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
+    static int[][] makeArray(int r, int c) throws IOException {
+        int[][] array = new int[r][c];
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
                 array[i][j] = io.i();
             }
         }
@@ -277,6 +241,54 @@ class io {
             io.w(i == array.length - 1 ? array[i] + (newLine ? "\n" : "") : array[i] + " ");
         }
     }
+}
+
+class UnionFind {
+    int[] size;
+    int count;
+
+    public UnionFind(int n) {
+        this.size = new int[n];
+        for (int i = 0; i < n; i++) {
+            this.size[i] = -1;
+        }
+    }
+
+    // Find the index of the elements root
+    public int find(int e) {
+        if (size[e] < 0) return e;
+        return size[e] = find(size[e]); // Path Compression - Set its parent to its ancestor
+    }
+
+    // Checks if two elements are in the same set
+    public boolean inSameSet(int x, int y) {
+        return find(x) == find(y);
+    }
+
+    // Get the size of the element's corresponding set
+    public int sizeOf(int e) {
+        int index = find(e);
+        return -size[index];
+    }
+
+    // Union the set of x and y.
+    public boolean union(int x, int y) {
+        int rootX = find(x), rootY = find(y);
+        if (rootX == rootY) return false;
+
+        int sizeX = sizeOf(x), sizeY = sizeOf(y);
+        if (sizeX > sizeY) {
+            size[rootX] -= sizeY;
+            size[rootY] = rootX;
+        }
+        else {
+            size[rootY] -= sizeX;
+            size[rootX] = rootY;
+        }
+        count--;
+        return true;
+    }
+
 }
 
 class Graph {

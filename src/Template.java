@@ -12,11 +12,10 @@ public class Template {
      * @return void
      */
     public void addTwo() throws IOException {
-        System.out.print("Please input two integers and press enter: ");
-        int a = io.i();
-        int b = io.i();
+        System.out.print("Please input two integers (separated by space or newline) and press enter: \n");
+        int a = io.i(), b = io.i();
         int c = a + b;
-        io.w("The answer is " + c);
+        System.out.print("The answer is " + c);
     }
 
     public void question2() throws IOException {
