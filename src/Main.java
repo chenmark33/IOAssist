@@ -249,6 +249,7 @@ class UnionFind {
 
     public UnionFind(int n) {
         this.size = new int[n];
+        this.count = n;
         for (int i = 0; i < n; i++) {
             this.size[i] = -1;
         }
